@@ -153,34 +153,21 @@
                   </div>
                   <div class="col-sm-6">
                     <div class="btn-group btn-group-toggle float-right" data-toggle="buttons">
-                      <label class="btn btn-sm btn-primary btn-simple active" id="0">
-                        <input type="radio" name="options" checked>
-                        <span class="d-none d-sm-block d-md-block d-lg-block d-xl-block">Plant 1</span>
-                        <span class="d-block d-sm-none">
-                          <i class="tim-icons icon-single-02"></i>
-                        </span>
-                      </label>
-                      <label class="btn btn-sm btn-primary btn-simple" id="1">
-                        <input type="radio" class="d-none d-sm-none" name="options">
-                        <span class="d-none d-sm-block d-md-block d-lg-block d-xl-block">Plant 2</span>
-                        <span class="d-block d-sm-none">
-                          <i class="tim-icons icon-gift-2"></i>
-                        </span>
-                      </label>
-                      <label class="btn btn-sm btn-primary btn-simple" id="2">
-                        <input type="radio" class="d-none" name="options">
-                        <span class="d-none d-sm-block d-md-block d-lg-block d-xl-block">Plant 3</span>
-                        <span class="d-block d-sm-none">
-                          <i class="tim-icons icon-tap-02"></i>
-                        </span>
-                      </label>
-                      <label class="btn btn-sm btn-primary btn-simple" id="2">
-                        <input type="radio" class="d-none" name="options">
-                        <span class="d-none d-sm-block d-md-block d-lg-block d-xl-block">Plant 4</span>
-                        <span class="d-block d-sm-none">
-                          <i class="tim-icons icon-tap-02"></i>
-                        </span>
-                      </label>
+
+
+                      @php $i = 1; @endphp
+                      @foreach ($plant as $pl)
+                        <label class="btn btn-sm btn-primary btn-simple @if($i == 1) active @endif" id="{{ $i }}">
+                          <input type="radio" name="options" checked>
+                          <span class="d-none d-sm-block d-md-block d-lg-block d-xl-block">Plant {{ $i }}</span>
+                          <span class="d-block d-sm-none">
+                            <i class="tim-icons icon-single-02"></i>
+                          </span>
+                        </label>
+                        @php $i++; @endphp
+                      @endforeach
+                      
+                      
                     </div>
                   </div>
                 </div>
@@ -430,7 +417,6 @@
     };
 
         // chart js
-        var chart_labels = ["00.00", "02.00", "04.00", "06.00", "08.00", "10.00", "12.00", "14.00", "16.00", "18.00", "20.00", "22.00"];
         var chart_data = [150, 70, 90, 70, 85, 60, 75, 60, 90, 80, 110, 100];
 
 
@@ -444,7 +430,7 @@
         var config = {
         type: 'line',
         data: {
-            labels: chart_data,
+            labels: {{ json_encode($plant[0]) }},
             datasets: [{
             label: "My First dataset",
             fill: true,
@@ -460,34 +446,25 @@
             pointHoverRadius: 4,
             pointHoverBorderWidth: 15,
             pointRadius: 4,
-            data: chart_data,
+            data: {{ json_encode($plant[0]) }},
             }]
         },
         options: gradientChartOptionsConfigurationWithTooltipPurple
         };
-        var myChartData = new Chart(ctx, config);
-        $("#0").click(function() {
-        var data = myChartData.config.data;
-        data.datasets[0].data = chart_data;
-        data.labels = chart_labels;
-        myChartData.update();
-        });
-        $("#1").click(function() {
-        var chart_data = [33, 32, 33, 31, 29, 28, 27, 27, 28, 30, 31, 30];
-        var data = myChartData.config.data;
-        data.datasets[0].data = chart_data;
-        data.labels = chart_labels;
-        myChartData.update();
-        });
 
-        $("#2").click(function() {
-        var chart_data = [60, 80, 65, 130, 80, 105, 90, 130, 70, 115, 60, 130];
-        var data = myChartData.config.data;
-        data.datasets[0].data = chart_data;
-        data.labels = chart_labels;
-        myChartData.update();
-        });
+        @php $i = 1 @endphp
+        @foreach ($plant as $pl)
+          var myChartData = new Chart(ctx, config);
+          $("#{{ $i }}").click(function() {
+          var data = myChartData.config.data;
+          data.datasets[0].data = {{ json_encode($plant[$i-1]) }};
+          data.labels = {{ json_encode($plant[$i-1]) }};
+          myChartData.update();
+          });
 
+          @php $i++ @endphp
+        @endforeach
+        
         // end of chart js
 
       $().ready(function() {

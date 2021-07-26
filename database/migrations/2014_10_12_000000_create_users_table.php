@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreteTableDataPlant extends Migration
+class CreateUsersTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,13 @@ class CreteTableDataPlant extends Migration
      */
     public function up()
     {
-        Schema::create('m_data_plant', function (Blueprint $table) {
+        Schema::create('users', function (Blueprint $table) {
             $table->id();
-            $table->string('plant-type');
-            $table->integer('value');
+            $table->string('name');
+            $table->string('email')->unique();
+            $table->timestamp('email_verified_at')->nullable();
+            $table->string('password');
+            $table->rememberToken();
             $table->timestamps();
         });
     }
@@ -28,6 +31,6 @@ class CreteTableDataPlant extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('m_data_plant');
+        Schema::dropIfExists('users');
     }
 }
